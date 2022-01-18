@@ -1,0 +1,3 @@
+Press space bar to start the game
+Press Esc to exit the game
+Press other button for help
