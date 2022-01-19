@@ -1,0 +1,4 @@
+Press 'a' to move to left side
+Press 'w' to move upwards
+Press 'd' to move to right-side
+Press 's' to move downwards
