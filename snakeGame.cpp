@@ -1,18 +1,3 @@
-// write a snake game in c++
-
-// The snake is to be controlled by the arrow keys.
-// The snake can eat the food.
-// The snake can die if it hits itself.
-// The snake appears in opposite direction after it hits the wall.
-// The window size is 800x600.
-// The starting screen is shown with the text from instructions.txt
-// The text is written in center of the screen.
-
-// User can start the game by pressing the space bar.
-// User can restart the game after dying by pressing the space bar.
-// User can quit the game by pressing the escape key.
-
-// import the libraries
 #include <iostream>
 #include <fstream>
 #include <windows.h>
@@ -25,20 +10,20 @@
 #include <thread>
 
 using namespace std;
-// define the constants
+
+// screen constants
 #define WIDTH 80
 #define HEIGHT 25
 
-// define the variables
+// game variables
 int score, snakeSize;
 int foodX, foodY;
-int bonusFoodX, bonusFoodY;
 int snakeX[100], snakeY[100];
 bool gameOver;
 int tailX, tailY;
 int gameDelay = 100;
 
-// declare the direction variables
+// direction variables
 enum eDirection
 {
     STOP = 0,
@@ -49,7 +34,7 @@ enum eDirection
 };
 eDirection direction;
 
-// declare the functions
+// game functions
 void gotoxy(int x, int y);
 void setScreenSize();
 void screenBorder();
@@ -57,7 +42,6 @@ void readInstructions();
 void readControls();
 void drawSnake();
 void drawFood();
-void drawBonusFood();
 void drawScore();
 void drawGame();
 void moveSnake();
@@ -70,7 +54,7 @@ void changeDirection();
 void increaseSpeed();
 void clrAndStartGame();
 
-// define the gotoxy function
+// gotoxy function
 void gotoxy(int x, int y)
 {
     COORD coord;
@@ -79,7 +63,8 @@ void gotoxy(int x, int y)
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 }
 
-// set the screen size to 80x25
+// screen size is 80x30
+// cursor is not visible
 void setScreenSize()
 {
     system("mode con cols=80 lines=30");
@@ -89,7 +74,7 @@ void setScreenSize()
     SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &info);
 }
 
-// define the screen border
+// function to draw the screen border
 void screenBorder()
 {
     for (int i = 0; i < WIDTH; i++)
@@ -116,7 +101,8 @@ void screenBorder()
     cout << char(188);
 }
 
-// fetch the multiline instruction from instructions.txt and display it vertically and horizontally center of the screen
+// function to fetch the multiline instruction from instructions.txt
+// display it in the center of the screen
 void readInstruction()
 {
     ifstream file;
@@ -136,7 +122,8 @@ void readInstruction()
     clrAndStartGame();
 }
 
-// read the controls instructions from controls.txt
+// function to read the controls instructions from controls.txt
+// display it in the bottom of game area
 void readControls()
 {
 
@@ -155,9 +142,7 @@ void readControls()
     gotoxy(WIDTH / 2, y);
 }
 
-// write a function to draw snake
-// clear the previous path of the snake
-// draw the snake
+// function to draw snake
 void drawSnake()
 {
     for (int i = 0; i < snakeSize; i++)
@@ -168,7 +153,7 @@ void drawSnake()
 }
 
 // write a function to draw food
-// the food is represented by an '*'
+// refresh the border since the upper left corner disappears
 void drawFood()
 {
     gotoxy(foodX, foodY);
@@ -176,14 +161,14 @@ void drawFood()
     screenBorder();
 }
 
-// write a function to display the score
+// function to display the score
 void drawScore()
 {
     gotoxy(WIDTH - 15, 0);
     cout << "Score: " << score;
 }
 
-// write a function to display the game
+// function to draw the game
 void drawGame()
 {
     readControls();
@@ -192,19 +177,17 @@ void drawGame()
     drawScore();
 }
 
-// write a function to move the snake when the user presses the arrow keys
+// function to move the snake according to the direction active
 void moveSnake()
 {
     tailX = snakeX[snakeSize - 1];
     tailY = snakeY[snakeSize - 1];
     changeDirection();
-    // move the snake in the direction of the key pressed
     for (int i = snakeSize - 1; i > 0; i--)
     {
         snakeX[i] = snakeX[i - 1];
         snakeY[i] = snakeY[i - 1];
     }
-    // move the snake in the direction of the key pressed
     if (direction == LEFT)
     {
         snakeX[0]--;
@@ -226,7 +209,7 @@ void moveSnake()
     cout << " ";
 }
 
-// write a function to change the direction of the snake when the user presses the arrow keys
+// function to change the direction of the snake when the user presses the arrow keys
 void changeDirection()
 {
     // detect the key pressed
@@ -264,10 +247,11 @@ void changeDirection()
     }
 }
 
-// write a function to check if the snake eats the food
-// if the snake eats the food
+// function to check if the snake eats the food
+// if the snake eats the food:
 // increase the score by 1
 // increase the size of the snake by 1
+// increase the speed
 // generate a new food
 void checkFood()
 {
@@ -281,25 +265,17 @@ void checkFood()
     }
 }
 
-// write a function to generate the food
+// function to generate the food
 // generate the food randomly
-// check if the food is on the snake
-// if the food is on the snake
-// generate the food randomly
+// if the snake eats the food, new food is generated
 void generateFood()
 {
     foodX = rand() % (WIDTH - 2) + 1;
     foodY = rand() % (HEIGHT - 2) + 1;
-    for (int i = 0; i < snakeSize; i++)
-    {
-        if (snakeX[i] == foodX && snakeY[i] == foodY)
-        {
-            generateFood();
-        }
-    }
+    drawFood();
 }
 
-// write a function to check if the snake hits the wall or itself
+// function to check if the snake hits the wall or itself
 void checkSnake()
 {
     // if the snake hits the wall, the snake passes through the wall and appear on the other side of the screen
@@ -324,7 +300,7 @@ void checkSnake()
         screenBorder();
         drawScore();
     }
-    // if the snake hits itself
+    // if the snake hits itself, game is over
     for (int i = 1; i < snakeSize; i++)
     {
         if (snakeX[0] == snakeX[i] && snakeY[0] == snakeY[i])
@@ -334,7 +310,7 @@ void checkSnake()
     }
 }
 
-// write a function to check if the game is over
+// function to check if the game is over
 void checkGame()
 {
     // if the game is over
@@ -345,6 +321,7 @@ void checkGame()
         // display the game over message
         gotoxy(WIDTH/2-5, HEIGHT/2-3);
         cout << "Game Over!";
+        // display the score over message
         gotoxy(WIDTH/2-4, HEIGHT/2-2);
         cout << "Score: " << score;
         readInstruction();
@@ -352,7 +329,7 @@ void checkGame()
     }
 }
 
-// write a function to clear the screen and start the game with keyboard press
+// function to clear the screen and start the game with keyboard press
 // wait for the user to press a key
 // if the user presses the space bar or key 'n', the game starts with gameDelay=200
 // if the user presses the key 'h', the game starts with gameDelay=100
@@ -392,13 +369,15 @@ void clrAndStartGame()
             }
         }
     }
+    // start the game
     startGame();
 }
 
-// write a function to increase the speed of the game
-// if the gameDelay is greather than 200, decrease the gameDelay by 3
-// else if the gameDelay is greater than 100, decrease the gameDelay by 2
-// else if the gameDelay is greater than 50, decrease the gameDelay by 1
+// function to increase the speed of the game
+// if the gameDelay is greather than 200, decrease the gameDelay by 8
+// else if the gameDelay is greater than 100, decrease the gameDelay by 7
+// else if the gameDelay is greater than 50, decrease the gameDelay by 4
+// else if the gameDelay is greater than 40, decrease the gameDelay by 3
 void increaseSpeed()
 {
     if (gameDelay > 200)
@@ -413,13 +392,13 @@ void increaseSpeed()
     {
         gameDelay -= 4;
     }
-    else if (gameDelay > 30)
+    else if (gameDelay > 40)
     {
         gameDelay -=3;
     }
 }
 
-// write a function to control the game
+// function to control the game
 void controlGame()
 {
     // move the snake
@@ -430,8 +409,6 @@ void controlGame()
     checkSnake();
     // check if the game is over
     checkGame();
-    // // increase the speed of the game
-    // increaseSpeed();
 }
 
 // write a function to start the game
@@ -439,28 +416,32 @@ void startGame()
 {
     // set the starting direction
     direction = RIGHT;
+
     // set the starting position of the snake
     snakeX[0] = WIDTH / 2;
     snakeY[0] = HEIGHT / 2;
+
     // set the starting position of the food
     foodX = (rand() % (WIDTH - 2)) + 1;
     foodY = (rand() % (HEIGHT - 2)) + 1;
-    // set the starting position of the bonus food
-    bonusFoodX = (rand() % (WIDTH - 2)) + 1;
-    bonusFoodY = (rand() % (HEIGHT - 2)) + 1;
 
     // set the starting score
     score = 0;
+
     // set the starting size of the snake
     snakeSize = 1;
+
     // set the starting gameOver to false
     gameOver = false;
+
     // control the game
     while (!gameOver)
     {
         controlGame();
+
         // delay the game
         Sleep(gameDelay);
+
         // draw the game
         drawGame();
     }
@@ -470,11 +451,15 @@ int main()
 {
     // set the screen size
     setScreenSize();
+
     // set the screen border
     screenBorder();
+
     // read the instructions
     readInstruction();
+
     // start the game
     startGame();
+    
     getch();
 }
