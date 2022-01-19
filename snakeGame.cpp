@@ -148,7 +148,7 @@ void drawSnake()
     for (int i = 0; i < snakeSize; i++)
     {
         gotoxy(snakeX[i], snakeY[i]);
-        cout << char(219);
+        cout << '#';
     }
 }
 
@@ -460,6 +460,6 @@ int main()
 
     // start the game
     startGame();
-    
+
     getch();
 }
