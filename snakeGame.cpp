@@ -152,7 +152,7 @@ void drawSnake()
     }
 }
 
-// write a function to draw food
+// function to draw food
 // refresh the border since the upper left corner disappears
 void drawFood()
 {
@@ -411,7 +411,7 @@ void controlGame()
     checkGame();
 }
 
-// write a function to start the game
+// function to start the game
 void startGame()
 {
     // set the starting direction
