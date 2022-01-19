@@ -1,3 +1,4 @@
-Press space bar to start the game
+Press 'space bar' or 'n' to start the game in normal speed
+Press 'h' to start the game in high speed
+Press 'e' to start the game in slow speed
 Press Esc to exit the game
-Press other button for help
