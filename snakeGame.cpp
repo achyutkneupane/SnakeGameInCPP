@@ -148,11 +148,11 @@ void drawSnake()
     for (int i = 0; i < snakeSize; i++)
     {
         gotoxy(snakeX[i], snakeY[i]);
-        cout << char(219);
+        cout << '#';
     }
 }
 
-// function to draw food
+// write a function to draw food
 // refresh the border since the upper left corner disappears
 void drawFood()
 {
@@ -411,7 +411,7 @@ void controlGame()
     checkGame();
 }
 
-// function to start the game
+// write a function to start the game
 void startGame()
 {
     // set the starting direction
@@ -460,6 +460,6 @@ int main()
 
     // start the game
     startGame();
-    
+
     getch();
 }
